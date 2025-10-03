@@ -36,5 +36,5 @@ This utility formats and converts export files from Cosmic v1 to the new Cosmic 
 
 **Example:**
 ```sh
-node index.js -n informacoes-estaticas-amaissp
+npm start -- -n informacoes-estaticas-amaissp
 ```
