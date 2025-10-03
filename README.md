@@ -15,13 +15,6 @@ This utility formats and converts export files from Cosmic v1 to the new Cosmic 
    ```
    Replace `<export-file-name>` with the desired object type (e.g., `informacoes-estaticas-amaissp`).
 
-   > **Note:** Make sure your `package.json` has the following script:
-   > ```json
-   > "scripts": {
-   >   "start": "node index.js"
-   > }
-   > ```
-
 3. **Output:**
    The script will process the data and generate a formatted file compatible with Cosmic v2.
 
