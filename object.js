@@ -1,8 +1,5 @@
-const { 
-	convertToJson, 
-	idGenerator,
-} = require("./utils")
 
+const { convertToJson, idGenerator } = require("./utils")
 let objectTypes = []
 
 const METAFIELDS_TYPES = {
@@ -27,30 +24,15 @@ const METAFIELDS_TYPES = {
 	"emoji": (type, data) => objetoNaoMapeado(type, data)
 }
 
-const findObjectType = (objectsTypes, slug) => {
-	const objectTypeIndex = objectsTypes.findIndex(el => el.slug === slug)
-	let info = { 
-		index: false, 
-		objectType: false
-	}
-
-	if(objectTypeIndex !== -1) {
-		const objectType = objectsTypes[objectTypeIndex]
-		info = {
-			index: objectTypeIndex,
-			objectType: objectType
-		}
-	}
-	return info
-}
-
 const formatType = (data) => {
-	if (!data.type) {
-		console.log("Type not found. Transform 'text' type")
-		data.type = 'text'
+	const f = METAFIELDS_TYPES[data.type]
+	if (f) {
+		const nData = f(data.type, data)
+		return nData;
 	}
-	let f = METAFIELDS_TYPES[data.type]
-	return f(data.type, data)
+
+	console.log("Object type not found -", data.type)
+	return null
 }
 
 const formatJsonType = ({id, type, title, key, value, ...rest}) => {
@@ -232,13 +214,7 @@ const formatRepeaterType = ({ id, type, title, key, repeater_fields, children })
 		if(typeof repeater_fields === 'string') {
 			repeater_fields = convertToJson(repeater_fields)
 		}
-
-		if(Array.isArray(repeater_fields)) {
-			nRepeaterFields = repeater_fields.map(el => formatType(el))
-		}else{
-			nRepeaterFields = []
-		}
-
+		nRepeaterFields = repeater_fields.map(el => formatType(el))
 	}
 	nRepeaterFields = nRepeaterFields.filter(item => item !== null)
 
@@ -249,6 +225,22 @@ const formatRepeaterType = ({ id, type, title, key, repeater_fields, children })
 		key,
 		repeater_fields: nRepeaterFields
 	}
+}
+
+const isValidJson = (str) => {
+	const cleanJson = str.replace(/^[^\[\{]+/, '').trim();
+  	try {
+    	JSON.parse(cleanJson.trim());
+    	return true;
+  	} catch (e) {
+		let nString = str.slice(1, -1);
+		try{
+			JSON.parse(nString.trim())
+			return true;
+		}catch(e){
+			return false;
+		}
+  	}
 }
 
 const formatTextType = ({ title, key, id, value, required }) => {
@@ -304,11 +296,58 @@ const formatObjectTypes = ({
 
 }
 
+const getFileCategoryFromExtension = (filename) => {
+	const extension = filename.split('.').pop().toLowerCase();
 
-module.exports = {
-	formatObjectTypes,
-	formatType,
-	objectTypes,
-	findObjectType
+	const categories = {
+		image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'],
+		video: ['mp4', 'avi', 'mov', 'wmv', 'webm', 'mkv'],
+		audio: ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a'],
+		application: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'exe', 'apk', 'zip', 'rar', '7z'],
+		text: ['txt', 'csv', 'json', 'xml', 'md'],
+	};
+
+	for (const [category, extensions] of Object.entries(categories)) {
+		if (extensions.includes(extension)) {
+			return category;
+		}
+	}
+
+	return null;
 }
+
+
+
+function idGenerator(tamanho = 10) {
+  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let idGerado = '';
+  const comprimentoCaracteres = caracteres.length;
+
+  for (let i = 0; i < tamanho; i++) {
+    const indiceAleatorio = Math.floor(Math.random() * comprimentoCaracteres);
+    idGerado += caracteres.charAt(indiceAleatorio);
+  }
+
+  return idGerado;
+}
+
+const checkInvalidCharacters = (jsonString) => {
+	const invalidChars = [];
+	
+	// Definir a faixa de caracteres válidos (acentos e caracteres do português)
+	const validCharsRange = /[\x20-\x7E\u00C0-\u00FF\u0100-\u017F\u1E00-\u1EFF\u20AC]/;
+
+	for (let i = 0; i < jsonString.length; i++) {
+		const charCode = jsonString.charCodeAt(i);
+		
+		// Verifica se o caractere é um controle, emoji ou fora da faixa Unicode permitida
+		if (!(validCharsRange.test(jsonString[i]))) {
+			invalidChars.push({ char: jsonString[i], code: charCode, position: i });
+		}
+	}
+
+	return invalidChars;
+}
+
+module.exports = { formatObjectTypes, formatType, objectTypes, isValidJson, checkInvalidCharacters }
 
