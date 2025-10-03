@@ -45,11 +45,11 @@ const findObjectType = (objectsTypes, slug) => {
 }
 
 const formatType = (data) => {
-	if (!data.type) {
-		console.log("Type not found. Transform 'text' type")
-		data.type = 'text'
-	}
 	let f = METAFIELDS_TYPES[data.type]
+	if (!data.type) {
+		console.log("Object Type not found.", data)
+		return null
+	}
 	return f(data.type, data)
 }
 
