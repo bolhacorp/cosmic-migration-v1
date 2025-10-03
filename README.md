@@ -11,9 +11,9 @@ This utility formats and converts export files from Cosmic v1 to the new Cosmic 
 
 2. **Run the script using npm:**
    ```sh
-   npm start -- -n <object-type-name>
+   npm start -- -n <export-file-name>
    ```
-   Replace `<object-type-name>` with the desired object type (e.g., `informacoes-estaticas-amaissp`).
+   Replace `<export-file-name>` with the desired object type (e.g., `informacoes-estaticas-amaissp`).
 
    > **Note:** Make sure your `package.json` has the following script:
    > ```json
