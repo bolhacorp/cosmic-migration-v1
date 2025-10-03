@@ -9,20 +9,24 @@ This utility formats and converts export files from Cosmic v1 to the new Cosmic 
    npm install
    ```
 
-2. **Run the script:**
+2. **Run the script using npm:**
    ```sh
-   node index.js -n <object-type-name>
+   npm start -- -n <object-type-name>
    ```
    Replace `<object-type-name>` with the desired object type (e.g., `informacoes-estaticas-amaissp`).
+
+   > **Note:** Make sure your `package.json` has the following script:
+   > ```json
+   > "scripts": {
+   >   "start": "node index.js"
+   > }
+   > ```
 
 3. **Output:**
    The script will process the data and generate a formatted file compatible with Cosmic v2.
 
 ## Files
 - `index.js`: Main entry point.
-- `object.js`: Contains formatting logic for object types and metafields.
-- `objectType.js`: (If present) Handles object type definitions.
-- `utils.js`: Utility functions.
 
 ## Notes
 - Make sure your input files are in the correct format as exported from Cosmic v1.
