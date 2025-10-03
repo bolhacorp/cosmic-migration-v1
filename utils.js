@@ -96,7 +96,7 @@ function logObjectDifferences(obj1, obj2, path = '') {
 const saveFile = async (info, outputPath) => {
 	try {
 		await writeFile(outputPath, JSON.stringify(info, null, 2), 'utf-8');
-		console.log("File saved.");
+		console.log(`File saved(${outputPath}).`);
 	} catch (err) {
 		console.error('Error saving file');
 		console.error(err);
