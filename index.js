@@ -34,7 +34,7 @@ const fetchData = async (filePath) => {
 };
 
 const formatMigrateObjects = async () => {
-	const filePath = `./dados/${fileName}.json`;
+	const filePath = `./data/${fileName}.json`;
 	const dataV1 = await fetchData(filePath);
 
 	const nObject = {
@@ -126,7 +126,7 @@ const formatMigrateObjects = async () => {
 								case 1:
 									// Equalizes the child element IDs to match the one being kept
 									break;
-								case: 5:
+								case 5:
 									objectType.metafields[indexReistredMetafield] = nMetafield
 									break;
 								case 9:
@@ -295,7 +295,7 @@ const formatMigrateObjects = async () => {
 	nObject['thumbnail'] = dataV1.bucket.thumbnail
 
 
-	saveFile({ bucket: nObject }, `./dados/${fileName}-formated.json`)
+	saveFile({ bucket: nObject }, `./data/${fileName}-formated.json`)
 }
 
 formatMigrateObjects();
